@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الشؤون القانونية - جامعة المنصورة الجديدة | الأجندة والمواعيد</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-red: #A31221; 
+            --secondary-red: #E22B3D; 
+            --bg-color: #F8FAFC; 
+            --white: #FFFFFF;
+            --text-main: #0F172A; 
+            --text-muted: #64748B;
+            --border-color: #E2E8F0;
+        }
+
+        * { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+
+        body {
+            margin: 0; padding: 0;
+            background-color: var(--bg-color);
+            display: flex; height: 100vh; overflow: hidden;
+        }
+
+        /* القائمة الجانبية */
+        .sidebar {
+            width: 280px; background: linear-gradient(135deg, var(--primary-red) 0%, #7a0d18 100%);
+            color: var(--white); display: flex; flex-direction: column;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1); z-index: 10;
+        }
+        .sidebar-header { padding: 35px 20px 20px; text-align: center; }
+        .logo-box {
+            width: 90px; height: 90px; background-color: var(--white); border-radius: 50%;
+            margin: 0 auto 15px; display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); border: 3px solid rgba(255, 255, 255, 0.2);
+        }
+        .logo-box img { width: 75%; height: 75%; object-fit: contain; }
+        .sidebar-header h2 { margin: 0; font-size: 18px; font-weight: 800; }
+        .sidebar-header p { margin: 4px 0 0 0; font-size: 12px; opacity: 0.8; }
+
+        .nav-menu { list-style: none; padding: 0 15px; margin: 20px 0; flex: 1; }
+        .nav-menu li {
+            padding: 14px 20px; margin-bottom: 8px; border-radius: 12px;
+            cursor: pointer; transition: all 0.3s ease; font-size: 15px; font-weight: 600;
+            display: flex; align-items: center; color: rgba(255, 255, 255, 0.8);
+        }
+        .nav-menu li i { margin-left: 15px; width: 20px; text-align: center; font-size: 18px; }
+        .nav-menu li:hover, .nav-menu li.active {
+            background-color: var(--white); color: var(--primary-red);
+            transform: translateX(-5px); box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+
+        .topbar {
+            background-color: var(--white); padding: 15px 40px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 1px 15px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 5;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .topbar-title h1 { margin: 0; color: var(--text-main); font-size: 22px; font-weight: 800; }
+        .topbar-title p { margin: 0; color: var(--text-muted); font-size: 13px; font-weight: 600;}
+        .user-profile { display: flex; align-items: center; gap: 15px; }
+        .avatar {
+            width: 42px; height: 42px; background-color: var(--primary-red);
+            border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            color: var(--white); font-weight: bold; font-size: 14px;
+        }
+
+        .dashboard-content { padding: 30px 40px; }
+
+        /* =========== الكروت العلوية =========== */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px; }
+        .stat-card {
+            background-color: var(--white); padding: 22px; border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; align-items: center;
+            border: 1px solid var(--border-color); border-right: 5px solid var(--primary-red);
+        }
+        .stat-icon {
+            width: 55px; height: 55px; background-color: rgba(163, 18, 33, 0.08);
+            color: var(--primary-red); border-radius: 14px; display: flex; justify-content: center;
+            align-items: center; font-size: 22px; margin-left: 20px;
+        }
+        .stat-info h3 { margin: 0 0 4px 0; color: var(--text-muted); font-size: 13px; font-weight: 700;}
+        .stat-info .number { font-size: 28px; font-weight: 800; color: var(--text-main); }
+
+        /* =========== تقسيم الشاشة (جدول المواعيد + التقويم) =========== */
+        .agenda-layout { display: grid; grid-template-columns: 1fr 340px; gap: 25px; }
+
+        /* القسم الأيمن: قائمة المهام */
+        .agenda-list-section {
+            background: var(--white); border-radius: 16px; padding: 25px;
+            border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .section-header h2 { margin: 0; font-size: 18px; font-weight: 800; }
+
+        .btn-primary {
+            background-color: var(--primary-red); color: var(--white); border: none;
+            padding: 10px 20px; border-radius: 10px; font-weight: 700; font-size: 13px;
+            cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px;
+        }
+        .btn-primary:hover { background-color: var(--secondary-red); }
+
+        .agenda-table { width: 100%; border-collapse: collapse; }
+        .agenda-table th, .agenda-table td { padding: 14px 16px; text-align: right; border-bottom: 1px solid #F1F5F9; font-size: 14px; }
+        .agenda-table th { color: var(--text-muted); font-weight: 700; font-size: 13px; background: #F8FAFC; }
+        .agenda-table td { font-weight: 600; color: var(--text-main); }
+
+        .type-badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; display: inline-block; }
+        .tb-court { background: #FCE8E6; color: #EF4444; }
+        .tb-inv { background: #FEF3D6; color: #F59E0B; }
+        .tb-contract { background: #E6F4EA; color: #10B981; }
+
+        .deadline-countdown { font-size: 12px; font-weight: 800; color: #EF4444; background: #FFF5F5; padding: 4px 8px; border-radius: 4px; }
+
+        /* القسم الأيسر: التقويم المصغر (Mini Calendar) */
+        .calendar-widget {
+            background: var(--white); border-radius: 16px; padding: 25px;
+            border: 1px solid var(--border-color); box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            height: fit-content;
+        }
+        .cal-month { text-align: center; font-size: 16px; font-weight: 800; color: var(--primary-red); margin-bottom: 15px; }
+        .cal-days-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
+        .cal-date {
+            aspect-ratio: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            font-size: 13px; font-weight: 700; border-radius: 8px; color: var(--text-main); position: relative; cursor: pointer;
+            background: #F8FAFC;
+        }
+        .cal-date.today { background: var(--primary-red); color: white; box-shadow: 0 4px 10px rgba(163, 18, 33, 0.3); }
+        .cal-date.event::after {
+            content: ''; position: absolute; bottom: 4px; width: 5px; height: 5px; background: var(--secondary-red); border-radius: 50%;
+        }
+        .cal-date.today.event::after { background: white; }
+
+        /* المودال */
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); align-items: center; justify-content: center;
+        }
+        .modal.show { display: flex; }
+        .modal-content { background-color: var(--white); width: 500px; border-radius: 20px; padding: 30px; border: 1px solid var(--border-color); box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 20px; }
+        .modal-header h3 { margin: 0; font-weight: 800; }
+        .close-btn { font-size: 24px; color: var(--text-muted); cursor: pointer; border: none; background: none; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 700; font-size: 13px; }
+        .form-control { width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; outline: none; background: #F8FAFC; }
+        .form-control:focus { border-color: var(--primary-red); background: #FFF; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-box">
+                <img src="logo_nmu.png" alt="لوجو الجامعة" onerror="this.style.display='none'">
+            </div>
+            <h2>جامعة المنصورة الجديدة</h2>
+            <p>إدارة الشؤون القانونية</p>
+        </div>
+        
+        <ul class="nav-menu">
+            <li onclick="window.location.href='index.html'"><i class="fa-solid fa-house"></i> لوحة التحكم</li>
+            <li onclick="window.location.href='cases.html'"><i class="fa-solid fa-folder-open"></i> ملفات القضايا</li>
+            <li onclick="window.location.href='investigations.html'"><i class="fa-solid fa-gavel"></i> التحقيقات</li>
+            <li onclick="window.location.href='contracts.html'"><i class="fa-solid fa-file-contract"></i> العقود والمستندات</li>
+            <li class="active" onclick="window.location.href='agenda.html'"><i class="fa-solid fa-calendar-days"></i> الأجندة والمواعيد</li>
+            <li onclick="window.location.href='settings.html'"><i class="fa-solid fa-gear"></i> الإعدادات</li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="topbar">
+            <div class="topbar-title">
+                <h1>أجندة المواعيد والمهام القانونية</h1>
+                <p>الجدولة المركزية لجلسات المحاكم، لجان التحقيق، وتواريخ تجديد العقود</p>
+            </div>
+            <div class="user-profile">
+                <div style="text-align: left; margin-right: 15px;">
+                    <div style="font-weight: 700; color: var(--text-main); font-size: 14px;">أحمد محمد</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">مستشار قانوني</div>
+                </div>
+                <div class="avatar">أ.م</div>
+            </div>
+        </div>
+
+        <div class="dashboard-content">
+
+            <div class="stats-grid">
+                <div class="stat-card" style="border-right-color: #EF4444;">
+                    <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color: #EF4444;"><i class="fa-solid fa-hourglass-half"></i></div>
+                    <div class="stat-info">
+                        <h3>استحقاقات عاجلة (خلال 48 ساعة)</h3>
+                        <div class="number">02</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="border-right-color: #F59E0B;">
+                    <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #F59E0B;"><i class="fa-solid fa-calendar-day"></i></div>
+                    <div class="stat-info">
+                        <h3>جلسات هذا الأسبوع</h3>
+                        <div class="number">08</div>
+                    </div>
+                </div>
+                <div class="stat-card" style="border-right-color: #10B981;">
+                    <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10B981;"><i class="fa-solid fa-list-check"></i></div>
+                    <div class="stat-info">
+                        <h3>مهام تم إنجازها اليوم</h3>
+                        <div class="number">04</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="agenda-layout">
+                
+                <div class="agenda-list-section">
+                    <div class="section-header">
+                        <h2>الرول الزمني للمستشارين</h2>
+                        <button class="btn-primary" onclick="showModal('modal-new-event')"><i class="fa-solid fa-calendar-plus"></i> جدولة موعد جديد</button>
+                    </div>
+
+                    <table class="agenda-table" id="agenda-table">
+                        <thead>
+                            <tr>
+                                <th>التاريخ والوقت</th>
+                                <th>التصنيف</th>
+                                <th>البيان / الموضوع</th>
+                                <th>المكلف بالحضور</th>
+                                <th>العداد التنازلي</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong style="color:var(--primary-red);">غداً، 10:00 ص</strong></td>
+                                <td><span class="type-badge tb-court">جلسة محكمة</span></td>
+                                <td>الدعوى رقم 4125 - القضاء الإداري (تقديم مذكرات)</td>
+                                <td>د. أحمد الرفاعي</td>
+                                <td><span class="deadline-countdown">متبقي 18 ساعة</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color:var(--primary-red);">25 يونيو، 12:30 م</strong></td>
+                                <td><span class="type-badge tb-inv">جلسة تحقيق</span></td>
+                                <td>استدعاء الطالب أحمد خالد (واقعة غش الميدتيرم)</td>
+                                <td>أ. محمود الشناوي</td>
+                                <td><span style="font-size:12px; color:var(--text-muted);">متبقي يومين</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color:var(--primary-red);">01 يوليو، 09:00 ص</strong></td>
+                                <td><span class="type-badge tb-contract">تجديد عقد</span></td>
+                                <td>انتهاء عقد توريد حواسب شركة (IBM)</td>
+                                <td>أ. سارة فهمي</td>
+                                <td><span style="font-size:12px; color:var(--text-muted);">متبقي 7 أيام</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="calendar-widget">
+                    <div class="cal-month"><i class="fa-regular fa-calendar-check"></i> يونيو 2026</div>
+                    <div class="cal-days-header">
+                        <span>ح</span><span>ن</span><span>ث</span><span>ر</span><span>خ</span><span>ج</span><span>س</span>
+                    </div>
+                    <div class="cal-grid">
+                        <div class="cal-date">1</div><div class="cal-date">2</div><div class="cal-date">3</div><div class="cal-date">4</div><div class="cal-date">5</div><div class="cal-date">6</div><div class="cal-date">7</div>
+                        <div class="cal-date">8</div><div class="cal-date">9</div><div class="cal-date">10</div><div class="cal-date">11</div><div class="cal-date">12</div><div class="cal-date">13</div><div class="cal-date">14</div>
+                        <div class="cal-date">15</div><div class="cal-date">16</div><div class="cal-date">17</div><div class="cal-date">18</div><div class="cal-date">19</div><div class="cal-date">20</div><div class="cal-date">21</div>
+                        <div class="cal-date">22</div><div class="cal-date">23</div><div class="cal-date today event" title="اليوم (لديك مهام)">24</div><div class="cal-date event" title="جلسة تحقيق">25</div><div class="cal-date">26</div><div class="cal-date">27</div>
+                        <div class="cal-date event" title="محكمة كفر الشيخ">28</div><div class="cal-date">29</div><div class="cal-date">30</div>
+                    </div>
+                    
+                    <div style="margin-top:20px; border-top:1px dashed var(--border-color); padding-top:15px; font-size:12px; font-weight:700; color:var(--text-muted);">
+                        <span style="display:inline-block; width:10px; height:10px; background:var(--primary-red); border-radius:50%; margin-left:5px;"></span> اليوم الحالي <br>
+                        <span style="display:inline-block; width:10px; height:10px; background:var(--secondary-red); border-radius:50%; margin-left:5px; margin-top:6px;"></span> يوم به استحقاق قانوني
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal" id="modal-new-event">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>جدولة استحقاق أو جلسة جديدة</h3>
+                <button class="close-btn" onclick="closeModal('modal-new-event')">&times;</button>
+            </div>
+            <form id="form-event">
+                <div class="form-group">
+                    <label>عنوان الموعد / البيان</label>
+                    <input type="text" id="ev-title" class="form-control" placeholder="اكتب موضوع الجلسة..." required>
+                </div>
+                <div class="form-group">
+                    <label>التصنيف</label>
+                    <select id="ev-type" class="form-control">
+                        <option value="court">جلسة محكمة</option>
+                        <option value="inv">جلسة تحقيق داخلي</option>
+                        <option value="contract">موعد تجديد تعاقد</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>التاريخ والوقت</label>
+                    <input type="datetime-local" id="ev-date" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>المستشار المكلف بالحضور</label>
+                    <input type="text" id="ev-lawyer" class="form-control" placeholder="اسم المحامي..." required>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%; justify-content:center; margin-top:10px;">
+                    <i class="fa-solid fa-check"></i> حفظ وتفعيل التنبيه
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showModal(id) { document.getElementById(id).classList.add('show'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+        document.getElementById('form-event').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = document.getElementById('ev-title').value;
+            const typeVal = document.getElementById('ev-type').value;
+            const dateVal = document.getElementById('ev-date').value;
+            const lawyer = document.getElementById('ev-lawyer').value;
+
+            let typeBadge = `<span class="type-badge tb-court">جلسة محكمة</span>`;
+            if(typeVal === 'inv') typeBadge = `<span class="type-badge tb-inv">جلسة تحقيق</span>`;
+            if(typeVal === 'contract') typeBadge = `<span class="type-badge tb-contract">تجديد عقد</span>`;
+
+            // تنسيق بسيط للوقت
+            const dateObj = new Date(dateVal);
+            const timeStr = dateObj.toLocaleDateString('ar-EG', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+            const tbody = document.querySelector('#agenda-table tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><strong style="color:var(--primary-red);">${timeStr}</strong></td>
+                <td>${typeBadge}</td>
+                <td>${title}</td>
+                <td>${lawyer}</td>
+                <td><span class="deadline-countdown" style="background:#FEF3C7; color:#B45309;">تمت الجدولة</span></td>
+            `;
+            tbody.insertBefore(row, tbody.firstChild);
+
+            document.getElementById('form-event').reset();
+            closeModal('modal-new-event');
+        });
+    </script>
+</body>
+</html>
